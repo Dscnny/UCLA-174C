@@ -100,6 +100,37 @@ class Spline {
     //now the function is this p(u) = h1*point0+h2*m0+h3*point1+h4*m1
     return point0.times(h1).plus(m0.times(h2)).plus(point1.times(h3)).plus(m1.times(h4));
   }
+
+  //now I have to sample the polyline
+  sample_p(segmentSample = 30)
+  {
+    const numC=this.num_control_points();
+    //same logic as earlier
+    if (numC===0)
+    {
+      return [];
+    }
+    else if(numC===1)
+    {
+      return [this.points[0]];
+    }
+    const segmentC = numC-1;
+    const out=[];
+    //now a for loop 
+    for (let segment = 0; segment<segmentC;segment++)
+    {
+      for (let z = 0;z<segmentSample;z++)
+      {
+        const u=z/segmentSample;
+        out.push(this.evaluate_seg(segment,u));
+      }
+    }
+
+    //we cannot forget the last endpoint
+    out.push(this.points[numC-1]);
+    return out;
+  }
+
 }
 
 export
@@ -143,6 +174,9 @@ const Assign_one_hermite_base = defs.Assign_one_hermite_base =
         this.spline.reset();
         this.spline.add_point(0, 1, 0,  1, 0, 0);
         this.spline.add_point(2, 1, 0,  1, 0, 0);
+        const samples = this.spline.sample_p(30);
+        console.log("num samples =", samples.length);
+        console.log("first =", samples[0], "last =", samples[samples.length - 1]);
 
         console.log("eval(0)  =", this.spline.eval(0));
         console.log("eval(0.5)=", this.spline.eval(0.5));
