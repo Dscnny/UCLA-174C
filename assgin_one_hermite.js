@@ -4,7 +4,6 @@ import {tiny, defs} from './examples/common.js';
 // Pull these names into this module's scope for convenience:
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
-// TODO: you should implement the required classes here or in another file.
 class Spline {
   // a lot of this will be with help from discussion
   //so the constructor first
@@ -90,8 +89,8 @@ const Assign_one_hermite_base = defs.Assign_one_hermite_base =
 
         this.ball_location = vec3(1, 1, 1);
         this.ball_radius = 0.25;
-
-        // TODO: you should create a Spline class instance
+        this.spline = new Spline();
+        
       }
 
       render_animation( caller )
