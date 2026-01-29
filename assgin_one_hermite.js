@@ -5,7 +5,7 @@ import {tiny, defs} from './examples/common.js';
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
 // TODO: you should implement the required classes here or in another file.
-
+class Spline {}
 export
 const Assign_one_hermite_base = defs.Assign_one_hermite_base =
     class Assign_one_hermite_base extends Component
