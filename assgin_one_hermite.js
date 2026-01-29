@@ -5,7 +5,37 @@ import {tiny, defs} from './examples/common.js';
 const { vec3, vec4, color, Mat4, Shape, Material, Shader, Texture, Component } = tiny;
 
 // TODO: you should implement the required classes here or in another file.
-class Spline {}
+class Spline {
+  // a lot of this will be with help from discussion
+  //so the constructor first
+  //consturctor wil help us keep track o the control points and the tangets at each of those points
+  constructor()
+  {
+      this.points = []; 
+      this.tangents = [];
+      this.size = 0;
+  }
+  //now a function to delete everything
+  reset() {
+    this.points = []
+    this.tangents=[];
+    //now when we press circle, straight, reparse, or load, then we are strting fesh
+  }
+  num_control_points()
+  {
+    //getting the total number of control points
+    return this.points.length;
+  }
+  add_point(x,y,z,tx,ty,tz)
+  {
+      this.points.push(vec3(x,y,z));
+      this.tangents.push(vec3(tx,ty,tz));
+      //self explanatory =, adding points to our lists
+  }
+  //i will also need one to set a point and set a tangent
+  
+}
+
 export
 const Assign_one_hermite_base = defs.Assign_one_hermite_base =
     class Assign_one_hermite_base extends Component
