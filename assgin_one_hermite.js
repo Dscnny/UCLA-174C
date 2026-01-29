@@ -50,6 +50,27 @@ class Spline {
     if(!Number.isInteger(index) || i<0||i>=this.points.length)
       throw new Error('Index is out of range');
   }
+  //now I have to evaluate postions at the global t and make sure it styas between 0 and 1
+  eval(t)
+  {
+    const num_controls_points= this.num_control_points();
+    if(n===0) 
+    {
+      return vec3(0,0,0);
+    }
+    else if (n===1) 
+    {
+      return this.points[0];
+    }
+    //now I hav e to do the clamping of the point, will use mah min and max functions
+    const _t =Math.max(0,Math.min(1,t));
+    //I need to also avoid segment overflow
+    if(_t>=1)
+      return this.points[num_controls_points-1];
+    //control_points -1 for the number of hermite segs
+    const segmentC = num_controls_points -1;
+    
+  }
 }
 
 export
@@ -90,7 +111,6 @@ const Assign_one_hermite_base = defs.Assign_one_hermite_base =
         this.ball_location = vec3(1, 1, 1);
         this.ball_radius = 0.25;
         this.spline = new Spline();
-        
       }
 
       render_animation( caller )
