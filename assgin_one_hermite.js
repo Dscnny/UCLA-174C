@@ -175,6 +175,7 @@ const Assign_one_hermite_base = defs.Assign_one_hermite_base =
         this.spline.add_point(0, 1, 0,  1, 0, 0);
         this.spline.add_point(2, 1, 0,  1, 0, 0);
         const samples = this.spline.sample_p(30);
+        this.spline_samples=[];
         console.log("num samples =", samples.length);
         console.log("first =", samples[0], "last =", samples[samples.length - 1]);
 
@@ -317,8 +318,10 @@ export class Assign_one_hermite extends Assign_one_hermite_base
   }
 
   update_scene() { // callback for Draw button
-    document.getElementById("output").value = "update_scene";
-    //TODO
+    //so i first same the curve 
+    this.spline_samples=this.spline.sample_p(30);
+    //printing something so i know it actually ran
+    document.getElementById("output").value = `drawn ${this.spline_samples.length} samples`;
   }
 
   load_spline() {
