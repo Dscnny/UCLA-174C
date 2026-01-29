@@ -47,18 +47,18 @@ class Spline {
   check_index(index)
   {
     //now i need to make sure my index is in range, avoiding issues in the fute
-    if(!Number.isInteger(index) || i<0||i>=this.points.length)
+    if(!Number.isInteger(index) || index<0||index>=this.points.length)
       throw new Error('Index is out of range');
   }
   //now I have to evaluate postions at the global t and make sure it styas between 0 and 1
   eval(t)
   {
     const num_controls_points= this.num_control_points();
-    if(n===0) 
+    if(num_controls_points===0) 
     {
       return vec3(0,0,0);
     }
-    else if (n===1) 
+    else if (num_controls_points===1) 
     {
       return this.points[0];
     }
@@ -69,7 +69,36 @@ class Spline {
       return this.points[num_controls_points-1];
     //control_points -1 for the number of hermite segs
     const segmentC = num_controls_points -1;
-    
+    //now i want to map the t to the seg inde and local param
+    const scaled = _t * segmentC;
+    const ind = Math.floor(scaled);
+    const local_param = scaled -ind;
+    //now going to eval the seg
+    return this.evaluate_seg(ind,local_param);
+  }
+
+  evaluate_seg(ind,local_param)
+  {
+    //so now i have to eval the hermite seg ind at local_param in [0,1]
+    const point0=this.points[ind];
+    const point1=this.points[ind+1];
+    //tangents --> dP/dt
+    //hermite use dP/du 
+    //dP/du = =dP/dt *dt
+    //dt is going to be size of one seg in global param space 
+    const dt = 1/(this.num_control_points()-1);
+    const m0=this.tangents[ind].times(dt);
+    const m1=this.tangents[ind+1].times(dt);
+    //now for the next to value before doing hermite basis functions
+    const u_square = local_param*local_param;
+    const u_cube=u_square*local_param;
+    //now the hermite basis functions
+    const h1 = 2*u_cube-3*u_square+1;
+    const h2 = u_cube-2*u_square+local_param;
+    const h3 = -2*u_cube+3*u_square;
+    const h4 = u_cube-u_square;
+    //now the function is this p(u) = h1*point0+h2*m0+h3*point1+h4*m1
+    return point0.times(h1).plus(m0.times(h2)).plus(point1.times(h3)).plus(m1.times(h4));
   }
 }
 
@@ -111,6 +140,13 @@ const Assign_one_hermite_base = defs.Assign_one_hermite_base =
         this.ball_location = vec3(1, 1, 1);
         this.ball_radius = 0.25;
         this.spline = new Spline();
+        this.spline.reset();
+        this.spline.add_point(0, 1, 0,  1, 0, 0);
+        this.spline.add_point(2, 1, 0,  1, 0, 0);
+
+        console.log("eval(0)  =", this.spline.eval(0));
+        console.log("eval(0.5)=", this.spline.eval(0.5));
+        console.log("eval(1)  =", this.spline.eval(1));
       }
 
       render_animation( caller )
