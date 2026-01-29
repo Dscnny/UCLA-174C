@@ -33,7 +33,24 @@ class Spline {
       //self explanatory =, adding points to our lists
   }
   //i will also need one to set a point and set a tangent
-  
+  set_point(index,x,y,z)
+  {
+    this.check_index(index);
+    this.points[index]=vec3(x,y,z);
+  }
+  set_tangent(index,tx,ty,tz)
+  {
+    this.check_index(index);
+    this.tangents[index]=vec3(tx,ty,tz);
+
+  }
+  //setters are done 
+  check_index(index)
+  {
+    //now i need to make sure my index is in range, avoiding issues in the fute
+    if(!Number.isInteger(index) || i<0||i>=this.points.length)
+      throw new Error('Index is out of range');
+  }
 }
 
 export
